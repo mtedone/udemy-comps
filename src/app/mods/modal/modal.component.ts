@@ -1,4 +1,11 @@
-import { Component, OnInit, ElementRef, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  OnDestroy,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 
 @Component({
   selector: 'app-modal',
@@ -6,6 +13,7 @@ import { Component, OnInit, ElementRef, OnDestroy } from '@angular/core';
   styleUrls: ['./modal.component.css'],
 })
 export class ModalComponent implements OnInit, OnDestroy {
+  @Output() close = new EventEmitter<void>();
   constructor(private elementRef: ElementRef) {}
 
   ngOnInit(): void {
@@ -16,6 +24,12 @@ export class ModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    document.body.removeChild(this.elementRef.nativeElement);
+    // We need to remove the element as we're adding it
+    // directly in ngOnInit
+    this.elementRef.nativeElement.remove();
+  }
+
+  onCloseClick() {
+    this.close.emit();
   }
 }
